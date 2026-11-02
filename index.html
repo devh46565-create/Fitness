@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14251f">
+<meta name="description" content="Personal home workout and monthly weight tracker">
+<link rel="manifest" href="manifest.json">
+<title>Forma — Home Fitness</title>
+<style>
+:root{--bg:#f4f3ee;--card:#fffefa;--ink:#172720;--muted:#78837c;--green:#315b49;--mint:#dce9dd;--lime:#d7f36a;--line:#e4e6df;--orange:#e99b63;--shadow:0 10px 28px #1727200c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{max-width:540px;margin:0 auto;padding:env(safe-area-inset-top) 16px calc(26px + env(safe-area-inset-bottom))}
+header{padding:23px 4px 17px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.6px;font-size:21px}.logo{width:35px;height:35px;border-radius:12px;background:var(--green);color:var(--lime);display:grid;place-items:center;font-size:18px}
+.month-pill{border:1px solid var(--line);background:var(--card);padding:9px 12px;border-radius:99px;color:var(--green);font-size:12px;font-weight:750}
+.hero{background:var(--ink);color:white;border-radius:27px;padding:22px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-72px;top:-80px;border:1px solid #ffffff1c;box-shadow:0 0 0 22px #ffffff08,0 0 0 44px #ffffff05}
+.eyebrow{text-transform:uppercase;letter-spacing:1.7px;font-size:10px;color:#b8c9bc;font-weight:800}
+.hero h1{font-size:29px;line-height:1.08;letter-spacing:-1.1px;margin:9px 0 8px;max-width:290px}.hero p{margin:0;color:#c0cbc3;font-size:13px;line-height:1.5}
+.goalrow{display:flex;align-items:center;gap:14px;margin-top:23px}.ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) var(--pct,0%),#ffffff20 0);position:relative;flex-shrink:0}.ring:before{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--ink)}.ring strong{z-index:1;font-size:15px}.goaltext strong{display:block;font-size:19px}.goaltext span{font-size:12px;color:#b8c9bc}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0 22px}.stat{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px 11px;min-width:0}.stat .label{font-size:10px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.6px}.stat .value{font-size:20px;font-weight:850;letter-spacing:-.6px;margin-top:6px}.stat .small{font-size:10px;color:var(--muted);margin-top:3px}
+.sectionhead{display:flex;align-items:end;justify-content:space-between;margin:23px 2px 12px}.sectionhead h2{margin:0;font-size:19px;letter-spacing:-.5px}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:11px}.textbtn{border:0;background:transparent;color:var(--green);font-size:12px;font-weight:800;padding:5px}
+.daystrip{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 10px;scrollbar-width:none}.daystrip::-webkit-scrollbar{display:none}.daybtn{min-width:58px;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:10px 7px;text-align:center;color:var(--ink)}.daybtn .dow{display:block;color:var(--muted);font-size:10px;font-weight:750}.daybtn .num{display:block;font-size:17px;font-weight:850;margin:5px 0}.daybtn .dot{display:block;width:6px;height:6px;border-radius:50%;background:#d9ddd6;margin:0 auto}.daybtn.active{background:var(--green);border-color:var(--green);color:white}.daybtn.active .dow{color:#d0ddd3}.daybtn.done .dot{background:var(--lime)}.daybtn.rest .dot{background:var(--orange)}
+.workout-card{background:var(--card);border:1px solid var(--line);border-radius:23px;padding:18px;box-shadow:var(--shadow)}
+.cardtop{display:flex;justify-content:space-between;gap:12px;align-items:start}.tag{display:inline-block;border-radius:99px;background:var(--mint);color:var(--green);padding:6px 9px;font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.5px}.cardtop h3{font-size:22px;letter-spacing:-.7px;margin:10px 0 4px}.cardtop p{margin:0;color:var(--muted);font-size:12px}.duration{white-space:nowrap;background:#f0f0e9;border-radius:13px;padding:9px 10px;font-size:11px;font-weight:800}
+.exercise-list{margin-top:17px;border-top:1px solid var(--line)}.exercise{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--line)}.check{appearance:none;width:23px;height:23px;border:1.5px solid #c6cec5;border-radius:8px;flex-shrink:0;background:#fff;display:grid;place-items:center}.check:checked{background:var(--green);border-color:var(--green)}.check:checked:after{content:"✓";color:white;font-size:15px;font-weight:900}.exname{font-size:13px;font-weight:750}.exdetail{font-size:11px;color:var(--muted);margin-top:3px}.exercise.completed .exname{text-decoration:line-through;color:#8a958d}.workout-actions{display:flex;gap:9px;margin-top:15px}.primary,.secondary{border-radius:13px;padding:12px 13px;font-size:12px;font-weight:850;border:1px solid var(--green)}.primary{background:var(--green);color:white;flex:1}.secondary{background:transparent;color:var(--green)}
+.note{margin:12px 2px 0;font-size:11px;color:var(--muted);line-height:1.5}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:21px;padding:17px;margin-top:12px}.monthnav{display:flex;align-items:center;justify-content:space-between;gap:8px}.monthnav button{border:1px solid var(--line);background:#fff;border-radius:11px;width:36px;height:36px;color:var(--green);font-weight:900}.monthnav strong{font-size:15px}.progressbar{height:9px;border-radius:99px;background:#e9ece5;overflow:hidden;margin:14px 0 8px}.progressbar span{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .2s}.progresscaption{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.weightform{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:12px}.weightform input{width:100%;min-width:0;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 9px;color:var(--ink);font-size:12px}.weightform button{border:0;border-radius:12px;background:var(--lime);color:var(--ink);font-size:12px;font-weight:900;padding:0 13px}.weightlist{margin-top:13px}.weightrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.weightrow span{color:var(--muted)}.empty{font-size:12px;color:var(--muted);padding:12px 0}
+.month-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.mini{background:#f4f5ef;border-radius:13px;padding:11px}.mini span{display:block;font-size:10px;color:var(--muted)}.mini strong{display:block;font-size:17px;margin-top:5px}
+footer{padding:24px 5px 6px;text-align:center;color:var(--muted);font-size:10px;line-height:1.5}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 15px;border-radius:99px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}.toast.show{opacity:1}
+@media(min-width:500px){.app{padding-left:22px;padding-right:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand"><div class="logo">↗</div>forma<span style="color:var(--green)">.</span></div><div class="month-pill" id="headerMonth">NOV 2026</div></header>
+<section class="hero">
+<div class="eyebrow">Your consistency era</div>
+<h1>Small steps.<br>Stronger you.</h1>
+<p>A home routine that fits around real life.<br>Show up, tick it off, repeat.</p>
+<div class="goalrow"><div class="ring" id="overallRing"><strong id="overallPct">0%</strong></div><div class="goaltext"><strong id="weightGoalText">82 → 75 kg</strong><span>Weight goal · one day at a time</span></div></div>
+</section>
+<div class="stats">
+<div class="stat"><div class="label">Sessions</div><div class="value" id="sessionCount">0</div><div class="small">this month</div></div>
+<div class="stat"><div class="label">Consistency</div><div class="value" id="monthPct">0%</div><div class="small">planned active days</div></div>
+<div class="stat"><div class="label">Latest weight</div><div class="value" id="latestWeight">—</div><div class="small" id="weightDelta">add first entry</div></div>
+</div>
+<div class="sectionhead"><div><h2>Your week</h2><p>Tap a date to see its plan</p></div><button class="textbtn" id="todayBtn">Today ↗</button></div>
+<div class="daystrip" id="daystrip"></div>
+<div class="sectionhead"><div><h2 id="workoutHeading">Today's session</h2><p id="workoutSub">A little progress counts.</p></div></div>
+<section class="workout-card" id="workoutCard"></section>
+<div class="sectionhead"><div><h2>Monthly progress</h2><p>Every month gets its own record</p></div></div>
+<section class="panel">
+<div class="monthnav"><button id="prevMonth" aria-label="Previous month">‹</button><strong id="monthTitle">November 2026</strong><button id="nextMonth" aria-label="Next month">›</button></div>
+<div class="progressbar"><span id="monthBar"></span></div>
+<div class="progresscaption"><span id="monthCaption">0 of 26 planned active days</span><strong id="monthPct2">0%</strong></div>
+<div class="month-summary">
+<div class="mini"><span>Completed</span><strong id="sumDone">0</strong></div>
+<div class="mini"><span>Rest days</span><strong id="sumRest">0</strong></div>
+<div class="mini"><span>Weight logs</span><strong id="sumWeights">0</strong></div>
+</div>
+<div class="workout-actions"><button class="primary" id="exportBtn">Export monthly report</button><button class="secondary" id="backupBtn">Backup data</button></div>
+<p class="note">Export a monthly CSV for your records. Backup saves your complete history as a JSON file.</p>
+</section>
+<div class="sectionhead"><div><h2>Weight journal</h2><p>Morning weigh-ins work best</p></div></div>
+<section class="panel">
+<div class="weightform"><input id="weightDate" type="date" aria-label="Weight date"><input id="weightValue" type="number" step="0.1" min="20" max="350" placeholder="kg e.g. 81.5" aria-label="Weight in kilograms"><button id="saveWeight">Save</button></div>
+<div class="weightlist" id="weightList"></div>
+</section>
+<footer>Made for your real-life routine · Data is stored in this browser on this device.<br>Export backups regularly so your monthly history stays safe.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const plan = {
+  0:{name:"Rest & reset",type:"REST",duration:"Recovery",desc:"Recover, hydrate and review your week.",items:[["Rest day","No formal workout needed"],["Optional mobility","5–10 minutes, only if you feel like it"]]},
+  1:{name:"Full-body strength",type:"WORKOUT A",duration:"25–30 min",desc:"Controlled movements; rest 30–60 sec between sets.",items:[["Warm-up","4 min · march, arm circles, side steps"],["Chair squats","2 × 8–12 reps"],["Wall push-ups","2 × 8–12 reps"],["Glute bridges","2 × 10–12 reps"],["Standing knee raises","2 × 10 per side"],["Bird dogs","2 × 8 per side"],["Calf raises","2 × 12–15 reps"],["Cool-down","3 min · gentle stretch"]]},
+  2:{name:"Indoor cardio",type:"WORKOUT B",duration:"20–25 min",desc:"40 sec movement, 20 sec transition; repeat the circuit twice.",items:[["Warm-up","3 min · gentle march and side steps"],["March in place","40 sec"],["Side steps","40 sec"],["Low-impact step jacks","40 sec"],["Standing knee drives","40 sec"],["Shadow boxing","40 sec"],["Alternating heel digs","40 sec"],["Repeat circuit","2 rounds total; rest as needed"],["Cool-down","2–3 min"]]},
+  3:{name:"Legs, core & strength",type:"WORKOUT C",duration:"25–30 min",desc:"2 sets per exercise; keep every repetition controlled.",items:[["Warm-up","4 min"],["Chair squats","2 × 8–12 reps"],["Standing hip abductions","2 × 10 per side"],["Wall push-ups","2 × 8–12 reps"],["Bird dogs","2 × 8 per side"],["Standing knee-to-elbow crunches","2 × 10 per side"],["Glute bridges","2 × 10–12 reps"],["Cool-down","3 min"]]},
+  4:{name:"Mobility & recovery",type:"RECOVERY",duration:"10–15 min",desc:"Keep it easy. A full rest day is fine if you feel tired.",items:[["Gentle marching","2 min"],["Shoulder rolls","1 min"],["Gentle side bends","1 min"],["Calf stretch","1 min"],["Hip mobility","2 min"],["Relaxed breathing","2 min"]]},
+  5:{name:"Full-body strength",type:"WORKOUT A",duration:"25–30 min",desc:"Repeat Monday's routine, adjusting reps to your energy.",items:[["Warm-up","4 min"],["Chair squats","2 × 8–12 reps"],["Wall push-ups","2 × 8–12 reps"],["Glute bridges","2 × 10–12 reps"],["Standing knee raises","2 × 10 per side"],["Bird dogs","2 × 8 per side"],["Calf raises","2 × 12–15 reps"],["Cool-down","3 min"]]},
+  6:{name:"Indoor cardio",type:"WORKOUT B",duration:"20–25 min",desc:"Low-impact circuit; take extra rest whenever needed.",items:[["Warm-up","3 min"],["March in place","40 sec"],["Side steps","40 sec"],["Low-impact step jacks","40 sec"],["Standing knee drives","40 sec"],["Shadow boxing","40 sec"],["Alternating heel digs","40 sec"],["Repeat circuit","2 rounds total"],["Cool-down","2–3 min"]]}
+};
+const STORAGE="formaFitnessTracker_v1";
+let db={checks:{},weights:[],notes:{}};
+try{db={...db,...JSON.parse(localStorage.getItem(STORAGE)||"{}")}}catch(e){}
+let viewDate=new Date(); viewDate.setHours(12,0,0,0);
+let selectedDate=new Date(); selectedDate.setHours(12,0,0,0);
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const monthKey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+const prettyMonth=d=>d.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+const prettyDate=s=>new Date(s+"T12:00:00").toLocaleDateString(undefined,{day:"numeric",month:"short"});
+const save=()=>{try{localStorage.setItem(STORAGE,JSON.stringify(db))}catch(e){toast("Storage is full — export a backup.")}};
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function dateRange(d){let y=d.getFullYear(),m=d.getMonth(),n=new Date(y,m+1,0).getDate();return Array.from({length:n},(_,i)=>new Date(y,m,i+1,12))}
+function dayPlan(d){return plan[d.getDay()]}
+function checkKey(d){return iso(d)}
+function isDone(d){return !!db.checks[checkKey(d)]?.done}
+function isRestObserved(d){return !!db.checks[checkKey(d)]?.rest}
+function isPlannedActive(d){return d.getDay()!==0}
+function monthStats(d){let dates=dateRange(d),active=dates.filter(isPlannedActive),done=active.filter(isDone).length,rests=dates.filter(x=>x.getDay()===0&&isRestObserved(x)).length,weights=db.weights.filter(w=>w.date.startsWith(monthKey(d)));return {dates,active,done,rests,weights,pct:active.length?Math.round(done/active.length*100):0}}
+function renderStrip(){
+ const dates=dateRange(selectedDate), targetMonth=monthKey(selectedDate);
+ const start=new Date(selectedDate); start.setDate(selectedDate.getDate()-((selectedDate.getDay()+6)%7));
+ const week=Array.from({length:7},(_,i)=>{let x=new Date(start);x.setDate(start.getDate()+i);return x});
+ $("daystrip").innerHTML=week.map(d=>{
+  const cls=["daybtn",iso(d)===iso(selectedDate)?"active":"",isDone(d)||isRestObserved(d)?"done":"",d.getDay()===0?"rest":""].join(" ");
+  return `<button class="${cls}" data-date="${iso(d)}"><span class="dow">${d.toLocaleDateString(undefined,{weekday:"short"})}</span><span class="num">${d.getDate()}</span><span class="dot"></span></button>`;
+ }).join("");
+ $("daystrip").querySelectorAll("button").forEach(b=>b.onclick=()=>{selectedDate=new Date(b.dataset.date+"T12:00:00");viewDate=new Date(selectedDate);render()});
+}
+function renderWorkout(){
+ const d=selectedDate,p=dayPlan(d), key=iso(d), state=db.checks[key]||{};
+ $("workoutHeading").textContent=iso(d)===iso(new Date())?"Today's session":d.toLocaleDateString(undefined,{weekday:"long"})+" session";
+ $("workoutSub").textContent=d.toLocaleDateString(undefined,{day:"numeric",month:"long"})+" · "+(state.done?"Completed":state.rest?"Rest observed":"One step at a time");
+ $("workoutCard").innerHTML=`<div class="cardtop"><div><span class="tag">${p.type}</span><h3>${p.name}</h3><p>${p.desc}</p></div><div class="duration">${p.duration}</div></div>
+ <div class="exercise-list">${p.items.map((it,i)=>{let checked=(state.items||[]).includes(i);return `<label class="exercise ${checked?"completed":""}"><input class="check itemcheck" type="checkbox" data-i="${i}" ${checked?"checked":""}><div><div class="exname">${it[0]}</div><div class="exdetail">${it[1]}</div></div></label>`}).join("")}</div>
+ <div class="workout-actions">${d.getDay()===0?`<button class="primary" id="restBtn">${state.rest?"✓ Rest observed":"Mark rest day observed"}</button>`:`<button class="primary" id="completeBtn">${state.done?"✓ Workout completed":"Mark workout complete"}</button>`}<button class="secondary" id="clearBtn">Reset</button></div>
+ <p class="note">Tick each exercise as you go. Completing the session is recorded separately from individual exercise ticks.</p>`;
+ $("workoutCard").querySelectorAll(".itemcheck").forEach(c=>c.onchange=()=>{let s=db.checks[key]||{items:[]};s.items=s.items||[];let i=+c.dataset.i;s.items=c.checked?[...new Set([...s.items,i])]:s.items.filter(x=>x!==i);db.checks[key]=s;save();render()});
+ if($("completeBtn"))$("completeBtn").onclick=()=>{let s=db.checks[key]||{items:[]};s.done=!s.done;delete s.rest;db.checks[key]=s;save();render();toast(s.done?"Workout saved ✓":"Completion unchecked")};
+ if($("restBtn"))$("restBtn").onclick=()=>{let s=db.checks[key]||{items:[]};s.rest=!s.rest;db.checks[key]=s;save();render();toast(s.rest?"Rest day saved":"Rest tick removed")};
+ $("clearBtn").onclick=()=>{if(confirm("Reset this date's workout ticks and completion status?")){delete db.checks[key];save();render();toast("Day reset")}};
+}
+function renderStats(){
+ const s=monthStats(viewDate),allActive=s.active.length;
+ $("headerMonth").textContent=viewDate.toLocaleDateString(undefined,{month:"short",year:"numeric"}).toUpperCase();
+ $("monthTitle").textContent=prettyMonth(viewDate);
+ $("sessionCount").textContent=s.done;
+ $("monthPct").textContent=s.pct+"%";$("monthPct2").textContent=s.pct+"%";
+ $("monthBar").style.width=s.pct+"%";
+ $("monthCaption").textContent=`${s.done} of ${allActive} planned active days`;
+ $("sumDone").textContent=s.done;$("sumRest").textContent=s.rests;$("sumWeights").textContent=s.weights.length;
+ $("overallPct").textContent=s.pct+"%";$("overallRing").style.setProperty("--pct",s.pct+"%");
+ $("weightGoalText").textContent="82 → 75 kg";
+ const allW=[...db.weights].sort((a,b)=>a.date.localeCompare(b.date));
+ const current=allW.filter(w=>w.date.startsWith(monthKey(viewDate))).sort((a,b)=>a.date.localeCompare(b.date));
+ const latest=current.length?current[current.length-1]:allW.length?allW[allW.length-1]:null;
+ $("latestWeight").textContent=latest?Number(latest.kg).toFixed(1):"—";
+ if(current.length>1){let delta=Number(current[current.length-1].kg)-Number(current[0].kg);$("weightDelta").textContent=(delta>0?"+":"")+delta.toFixed(1)+" kg this month"}
+ else $("weightDelta").textContent=latest?"latest entry":"add first entry";
+}
+function renderWeights(){
+ const list=db.weights.filter(w=>w.date.startsWith(monthKey(viewDate))).sort((a,b)=>b.date.localeCompare(a.date));
+ $("weightList").innerHTML=list.length?list.map(w=>`<div class="weightrow"><div>${prettyDate(w.date)} <span>· morning weight</span></div><strong>${Number(w.kg).toFixed(1)} kg</strong></div>`).join(""):`<div class="empty">No weight entries for ${prettyMonth(viewDate)} yet. Add one above when you're ready.</div>`;
+}
+function render(){renderStrip();renderWorkout();renderStats();renderWeights();$("weightDate").value=iso(selectedDate)}
+$("prevMonth").onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);viewDate.setDate(1);selectedDate=new Date(viewDate);render()};
+$("nextMonth").onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);viewDate.setDate(1);selectedDate=new Date(viewDate);render()};
+$("todayBtn").onclick=()=>{selectedDate=new Date();selectedDate.setHours(12,0,0,0);viewDate=new Date(selectedDate);render()};
+$("saveWeight").onclick=()=>{let date=$("weightDate").value,kg=Number($("weightValue").value);if(!date||!kg||kg<20||kg>350){toast("Enter a valid date and weight");return}db.weights=db.weights.filter(w=>w.date!==date);db.weights.push({date,kg:Number(kg.toFixed(1))});save();viewDate=new Date(date+"T12:00:00");selectedDate=new Date(viewDate);$("weightValue").value="";render();toast("Weight entry saved")};
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$("exportBtn").onclick=()=>{let s=monthStats(viewDate),rows=[["Date","Day","Planned session","Workout completed","Rest observed","Exercise ticks","Weight kg"]];s.dates.forEach(d=>{let k=iso(d),c=db.checks[k]||{},w=db.weights.find(x=>x.date===k);rows.push([k,d.toLocaleDateString(undefined,{weekday:"long"}),dayPlan(d).name,c.done?"Yes":"No",c.rest?"Yes":"No",(c.items||[]).length,w?w.kg:""]) });rows.push([],["Month",prettyMonth(viewDate)],["Completed sessions",s.done],["Planned active days",s.active.length],["Completion %",s.pct],["Rest days observed",s.rests]);const csv=rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");download(`forma-${monthKey(viewDate)}-report.csv`,csv,"text/csv");toast("Monthly report exported")};
+$("backupBtn").onclick=()=>{download(`forma-backup-${iso(new Date())}.json`,JSON.stringify({app:"Forma Home Fitness",version:1,exportedAt:new Date().toISOString(),data:db},null,2),"application/json");toast("Full backup exported")};
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+const today=new Date();selectedDate=new Date(today);selectedDate.setHours(12,0,0,0);viewDate=new Date(selectedDate);viewDate.setDate(1);
+render();
+</script>
+</body>
+</html>

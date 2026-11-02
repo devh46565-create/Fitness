@@ -1,0 +1,11 @@
+{
+  "name": "Forma Home Fitness Tracker",
+  "short_name": "Forma Fitness",
+  "description": "Daily home workout checklist and monthly weight progress.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f3ee",
+  "theme_color": "#14251f",
+  "orientation": "portrait",
+  "icons": []
+}
