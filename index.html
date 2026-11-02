@@ -13,7 +13,7 @@
 button,input,select{font:inherit}button{cursor:pointer}
 .app{max-width:540px;margin:0 auto;padding:env(safe-area-inset-top) 16px calc(26px + env(safe-area-inset-bottom))}
 header{padding:23px 4px 17px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.6px;font-size:21px}.logo{width:35px;height:35px;border-radius:12px;background:var(--green);color:var(--lime);display:grid;place-items:center;font-size:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:850;letter-spacing:-.6px;font-size:21px}.logo{width:35px;height:35px;border-radius:12px;object-fit:cover;display:block}
 .month-pill{border:1px solid var(--line);background:var(--card);padding:9px 12px;border-radius:99px;color:var(--green);font-size:12px;font-weight:750}
 .hero{background:var(--ink);color:white;border-radius:27px;padding:22px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-72px;top:-80px;border:1px solid #ffffff1c;box-shadow:0 0 0 22px #ffffff08,0 0 0 44px #ffffff05}
@@ -32,11 +32,14 @@ header{padding:23px 4px 17px;display:flex;align-items:center;justify-content:spa
 .month-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.mini{background:#f4f5ef;border-radius:13px;padding:11px}.mini span{display:block;font-size:10px;color:var(--muted)}.mini strong{display:block;font-size:17px;margin-top:5px}
 footer{padding:24px 5px 6px;text-align:center;color:var(--muted);font-size:10px;line-height:1.5}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 15px;border-radius:99px;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}.toast.show{opacity:1}
 @media(min-width:500px){.app{padding-left:22px;padding-right:22px}}
+
+.activity-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.activity-stat{background:#f1f4ec;border-radius:14px;padding:12px 10px}.activity-stat span{display:block;font-size:10px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.4px}.activity-stat strong{display:block;font-size:19px;margin-top:5px;letter-spacing:-.5px}.activity-form{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.activity-form label{display:block;font-size:11px;color:var(--muted);font-weight:750}.activity-form input,.activity-form select{display:block;width:100%;min-width:0;margin-top:5px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 9px;color:var(--ink);font-size:13px}.activity-form .full{grid-column:1/-1}.activity-form button{grid-column:1/-1;border:0;border-radius:13px;background:var(--lime);color:var(--ink);font-weight:900;padding:13px}.activity-list{margin-top:13px}.activity-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.activity-row .activity-main{font-size:13px;font-weight:800}.activity-row .activity-sub{font-size:11px;color:var(--muted);margin-top:4px}.activity-row .activity-right{text-align:right;white-space:nowrap;font-size:12px;font-weight:850}.activity-row .delete-activity{border:0;background:transparent;color:#9a5b45;font-size:11px;font-weight:800;padding:5px 0 0}.activity-hint{font-size:11px;color:var(--muted);line-height:1.5;margin:10px 0 0}
+
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="brand"><div class="logo">↗</div>forma<span style="color:var(--green)">.</span></div><div class="month-pill" id="headerMonth">NOV 2026</div></header>
+<header><div class="brand"><img class="logo" src="./icon-192.png" alt="Forma Fitness icon">forma<span style="color:var(--green)">.</span></div><div class="month-pill" id="headerMonth">NOV 2026</div></header>
 <section class="hero">
 <div class="eyebrow">Your consistency era</div>
 <h1>Small steps.<br>Stronger you.</h1>
@@ -52,6 +55,26 @@ footer{padding:24px 5px 6px;text-align:center;color:var(--muted);font-size:10px;
 <div class="daystrip" id="daystrip"></div>
 <div class="sectionhead"><div><h2 id="workoutHeading">Today's session</h2><p id="workoutSub">A little progress counts.</p></div></div>
 <section class="workout-card" id="workoutCard"></section>
+
+<div class="sectionhead"><div><h2>Walk &amp; run tracker</h2><p>Log your activity manually — no GPS needed</p></div></div>
+<section class="panel">
+<div class="activity-stats">
+ <div class="activity-stat"><span>Total distance</span><strong id="activityKm">0.0 km</strong></div>
+ <div class="activity-stat"><span>Total time</span><strong id="activityTime">0 min</strong></div>
+ <div class="activity-stat"><span>Activities</span><strong id="activityCount">0</strong></div>
+</div>
+<div class="activity-form">
+ <label>Activity type<select id="activityType"><option value="Walk">Walk</option><option value="Run">Run</option><option value="Walk + Run">Walk + Run</option></select></label>
+ <label>Date<input id="activityDate" type="date"></label>
+ <label>Runtime (minutes)<input id="activityMinutes" type="number" min="1" max="1440" step="1" placeholder="e.g. 35"></label>
+ <label>Distance (km)<input id="activityDistance" type="number" min="0.01" max="500" step="0.01" placeholder="e.g. 3.2"></label>
+ <label class="full">Notes (optional)<input id="activityNotes" type="text" maxlength="120" placeholder="e.g. evening walk"></label>
+ <button id="saveActivity">＋ Save walk / run</button>
+</div>
+<p class="activity-hint">Enter the time and distance from your own estimate or fitness app. Records are saved on this device and grouped by the selected month.</p>
+<div class="activity-list" id="activityList"></div>
+</section>
+
 <div class="sectionhead"><div><h2>Monthly progress</h2><p>Every month gets its own record</p></div></div>
 <section class="panel">
 <div class="monthnav"><button id="prevMonth" aria-label="Previous month">‹</button><strong id="monthTitle">November 2026</strong><button id="nextMonth" aria-label="Next month">›</button></div>
@@ -84,7 +107,8 @@ const plan = {
   6:{name:"Indoor cardio",type:"WORKOUT B",duration:"20–25 min",desc:"Low-impact circuit; take extra rest whenever needed.",items:[["Warm-up","3 min"],["March in place","40 sec"],["Side steps","40 sec"],["Low-impact step jacks","40 sec"],["Standing knee drives","40 sec"],["Shadow boxing","40 sec"],["Alternating heel digs","40 sec"],["Repeat circuit","2 rounds total"],["Cool-down","2–3 min"]]}
 };
 const STORAGE="formaFitnessTracker_v1";
-let db={checks:{},weights:[],notes:{}};
+let db={checks:{},weights:[],notes:{},activities:[]};
+db.activities=Array.isArray(db.activities)?db.activities:[];
 try{db={...db,...JSON.parse(localStorage.getItem(STORAGE)||"{}")}}catch(e){}
 let viewDate=new Date(); viewDate.setHours(12,0,0,0);
 let selectedDate=new Date(); selectedDate.setHours(12,0,0,0);
@@ -148,14 +172,29 @@ function renderWeights(){
  const list=db.weights.filter(w=>w.date.startsWith(monthKey(viewDate))).sort((a,b)=>b.date.localeCompare(a.date));
  $("weightList").innerHTML=list.length?list.map(w=>`<div class="weightrow"><div>${prettyDate(w.date)} <span>· morning weight</span></div><strong>${Number(w.kg).toFixed(1)} kg</strong></div>`).join(""):`<div class="empty">No weight entries for ${prettyMonth(viewDate)} yet. Add one above when you're ready.</div>`;
 }
-function render(){renderStrip();renderWorkout();renderStats();renderWeights();$("weightDate").value=iso(selectedDate)}
+
+function renderActivities(){
+ const list=db.activities.filter(a=>a.date.startsWith(monthKey(viewDate))).sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+ const km=list.reduce((n,a)=>n+Number(a.km),0), mins=list.reduce((n,a)=>n+Number(a.minutes),0);
+ $("activityKm").textContent=km.toFixed(1)+" km";
+ $("activityTime").textContent=mins>=60?Math.floor(mins/60)+"h "+(mins%60?mins%60+"m":""):mins+" min";
+ $("activityCount").textContent=list.length;
+ $("activityList").innerHTML=list.length?list.map(a=>`<div class="activity-row"><div><div class="activity-main">${a.type} · ${prettyDate(a.date)}</div><div class="activity-sub">${a.notes?escapeHtml(a.notes)+" · ":""}${Number(a.minutes)} min</div><button class="delete-activity" data-delete-activity="${a.id}">Delete</button></div><div class="activity-right">${Number(a.km).toFixed(2)} km</div></div>`).join(""):`<div class="empty">No walks or runs logged for ${prettyMonth(viewDate)}. Add your first activity above.</div>`;
+ $("activityList").querySelectorAll("[data-delete-activity]").forEach(b=>b.onclick=()=>{if(confirm("Delete this activity record?")){db.activities=db.activities.filter(a=>String(a.id)!==b.dataset.deleteActivity);save();renderActivities();toast("Activity deleted")}});
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function render(){renderStrip();renderWorkout();renderStats();renderWeights();renderActivities();$("weightDate").value=iso(selectedDate);$("activityDate").value=iso(selectedDate)}
 $("prevMonth").onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);viewDate.setDate(1);selectedDate=new Date(viewDate);render()};
 $("nextMonth").onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);viewDate.setDate(1);selectedDate=new Date(viewDate);render()};
 $("todayBtn").onclick=()=>{selectedDate=new Date();selectedDate.setHours(12,0,0,0);viewDate=new Date(selectedDate);render()};
 $("saveWeight").onclick=()=>{let date=$("weightDate").value,kg=Number($("weightValue").value);if(!date||!kg||kg<20||kg>350){toast("Enter a valid date and weight");return}db.weights=db.weights.filter(w=>w.date!==date);db.weights.push({date,kg:Number(kg.toFixed(1))});save();viewDate=new Date(date+"T12:00:00");selectedDate=new Date(viewDate);$("weightValue").value="";render();toast("Weight entry saved")};
 function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-$("exportBtn").onclick=()=>{let s=monthStats(viewDate),rows=[["Date","Day","Planned session","Workout completed","Rest observed","Exercise ticks","Weight kg"]];s.dates.forEach(d=>{let k=iso(d),c=db.checks[k]||{},w=db.weights.find(x=>x.date===k);rows.push([k,d.toLocaleDateString(undefined,{weekday:"long"}),dayPlan(d).name,c.done?"Yes":"No",c.rest?"Yes":"No",(c.items||[]).length,w?w.kg:""]) });rows.push([],["Month",prettyMonth(viewDate)],["Completed sessions",s.done],["Planned active days",s.active.length],["Completion %",s.pct],["Rest days observed",s.rests]);const csv=rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");download(`forma-${monthKey(viewDate)}-report.csv`,csv,"text/csv");toast("Monthly report exported")};
-$("backupBtn").onclick=()=>{download(`forma-backup-${iso(new Date())}.json`,JSON.stringify({app:"Forma Home Fitness",version:1,exportedAt:new Date().toISOString(),data:db},null,2),"application/json");toast("Full backup exported")};
+
+$("saveActivity").onclick=()=>{const date=$("activityDate").value,type=$("activityType").value,minutes=Number($("activityMinutes").value),km=Number($("activityDistance").value),notes=$("activityNotes").value.trim();if(!date||!Number.isFinite(minutes)||minutes<1||minutes>1440||!Number.isFinite(km)||km<=0||km>500){toast("Enter a valid date, runtime and distance");return}db.activities.push({id:Date.now(),date,type,minutes:Math.round(minutes),km:Number(km.toFixed(2)),notes});save();viewDate=new Date(date+"T12:00:00");selectedDate=new Date(viewDate);$("activityMinutes").value="";$("activityDistance").value="";$("activityNotes").value="";render();toast("Walk / run saved ✓")};
+
+$("exportBtn").onclick=()=>{let s=monthStats(viewDate),rows=[["Date","Day","Planned session","Workout completed","Rest observed","Exercise ticks","Weight kg","Walk/run distance km","Walk/run runtime min","Walk/run entries"]];s.dates.forEach(d=>{let k=iso(d),c=db.checks[k]||{},w=db.weights.find(x=>x.date===k);rows.push([k,d.toLocaleDateString(undefined,{weekday:"long"}),dayPlan(d).name,c.done?"Yes":"No",c.rest?"Yes":"No",(c.items||[]).length,w?w.kg:""]) });rows.push([],["Month",prettyMonth(viewDate)],["Completed sessions",s.done],["Planned active days",s.active.length],["Completion %",s.pct],["Rest days observed",s.rests]);const csv=rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\r\n");download(`forma-${monthKey(viewDate)}-report.csv`,csv,"text/csv");toast("Monthly report exported")};
+$("backupBtn").onclick=()=>{download(`forma-backup-${iso(new Date())}.json`,JSON.stringify({app:"Forma Home Fitness",version:2,exportedAt:new Date().toISOString(),data:db},null,2),"application/json");toast("Full backup exported")};
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 const today=new Date();selectedDate=new Date(today);selectedDate.setHours(12,0,0,0);viewDate=new Date(selectedDate);viewDate.setDate(1);
 render();
